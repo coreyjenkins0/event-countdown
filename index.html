@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Countdown</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:white;padding:25px;text-align:center}
+main{max-width:600px;margin:40px auto;background:#1e293b;padding:30px;border-radius:18px}
+input{width:100%;padding:13px;margin:10px 0;box-sizing:border-box;border:0;border-radius:8px}
+button{background:#0284c7;color:white;padding:14px 22px;border:0;border-radius:8px;cursor:pointer}
+#countdown{font-size:32px;color:#38bdf8;margin:30px 0;line-height:1.8}
+</style>
+</head>
+<body>
+<main>
+<h1>Event Countdown</h1>
+<p>Count down to your important moments.</p>
+<input id="event" placeholder="Event name">
+<input id="date" type="datetime-local">
+<button onclick="startCountdown()">Start Countdown</button>
+<h2 id="title"></h2>
+<div id="countdown">Choose an event date.</div>
+</main>
+<script>
+let interval=null;
+let target=0;
+function startCountdown(){
+ const name=document.getElementById("event").value.trim();
+ const date=document.getElementById("date").value;
+ const time=new Date(date).getTime();
+ if(!name||!Number.isFinite(time)||time<=Date.now()){
+  document.getElementById("countdown").textContent="Enter a valid future event.";
+  return;
+ }
+ clearInterval(interval);
+ target=time;
+ document.getElementById("title").textContent=name;
+ interval=setInterval(update,1000);
+ update();
+}
+function update(){
+ const remaining=Math.max(0,Math.floor((target-Date.now())/1000));
+ const output=document.getElementById("countdown");
+ if(target<=Date.now()){
+  clearInterval(interval);
+  output.textContent="Your event has arrived!";
+  return;
+ }
+ const days=Math.floor(remaining/86400);
+ const hours=Math.floor(remaining/3600)%24;
+ const minutes=Math.floor(remaining/60)%60;
+ const seconds=remaining%60;
+ output.textContent=days+"d : "+hours+"h : "+minutes+"m : "+seconds+"s";
+}
+</script>
+</body>
+</html>
